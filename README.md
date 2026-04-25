@@ -79,8 +79,9 @@ ncr-ai-assistant/
 
 ## 🚀 How to Run the Project
 
-1️⃣ Clone the repository
 ```bash
+1️⃣ Clone the repository
+
 git clone https://github.com/your-username/ncr-ai-assistant.git
 cd ncr-ai-assistant
 
@@ -90,7 +91,7 @@ pip install -r requirements.txt
 
 3️⃣ Setup API key
 
-in .env file , paster your api key:
+create .env file , paste your api key:
 GEMINI_API_KEY=your_api_key_here
 
 Get Key here : https://aistudio.google.com/api-keys 
