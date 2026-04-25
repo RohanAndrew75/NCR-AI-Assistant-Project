@@ -1,0 +1,12 @@
+streamlit
+pandas
+openpyxl
+google-generativeai
+python-dotenv
+scikit-learn
+openpyxl
+tensorflow==2.15.0
+keras==2.15.0
+transformers==4.38.2
+sentence-transformers==2.7.0
+bert-score
