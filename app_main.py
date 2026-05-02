@@ -68,7 +68,7 @@ def save_feedback(user_input, result, feedback):
 st.title("🔧 NCR AI Assistant")
 st.info("🧠 Continual Learning Enabled: AI adapts using past high-quality NCR feedback")
 
-# ⭐ Show learning status (VERY IMPORTANT)
+#  Show learning status (VERY IMPORTANT)
 examples = load_champion_examples()
 st.expander("🧠 Learned Examples").write(examples)
 
@@ -103,7 +103,7 @@ if st.button("Analyze NCR"):
         st.json(result)
         st.stop()
 
-    # ⭐ STORE RESULT IN SESSION (IMPORTANT FIX)
+    #  STORE RESULT IN SESSION (IMPORTANT FIX)
     st.session_state["last_result"] = result
     st.session_state["last_input"] = user_input
 
@@ -120,13 +120,13 @@ if "last_result" in st.session_state:
     quality = classify(final)
 
     if comp < 5:
-        st.error("❌ Missing critical 5W1H fields")
+        st.error(" Missing critical 5W1H fields")
     elif final < 7:
-        st.warning("⚠️ NCR quality can be improved")
+        st.warning(" NCR quality can be improved")
     else:
-        st.success("✅ NCR acceptable")
+        st.success(" NCR acceptable")
 
-    st.subheader("📊 Evaluation Scores")
+    st.subheader(" Evaluation Scores")
     st.write(f"Completeness Score: {comp:.2f}/6")
     st.write(f"Semantic Score: {sem:.2f}/4")
     st.write(f"Final Score: {final:.2f}/10 → {quality}")
@@ -135,14 +135,14 @@ if "last_result" in st.session_state:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.write("❌ Original NCR")
+        st.write(" Original NCR")
         st.info(user_input)
 
     with col2:
-        st.write("✅ AI Improved NCR")
+        st.write(" AI Improved NCR")
         st.success(result.get("Improved_Description", "Not generated"))
 
-    st.subheader("🔍 5W1H Extraction")
+    st.subheader(" 5W1H Extraction")
 
     for k in ["What", "Where", "When", "Why", "Who", "How"]:
         val = result.get(k, "Not specified")
@@ -166,7 +166,7 @@ if "last_result" in st.session_state:
         st.success("No missing fields detected")
 
     # ---------------- FEEDBACK ----------------
-    st.subheader("💬 Feedback System")
+    st.subheader(" Feedback System")
 
     feedback = st.radio(
         "Is this NCR analysis useful?",
@@ -180,5 +180,5 @@ if "last_result" in st.session_state:
         st.rerun()
 
     # ---------------- DEBUG ----------------
-    with st.expander("🔍 Debug Output"):
+    with st.expander(" Debug Output"):
         st.json(result)

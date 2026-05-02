@@ -19,19 +19,19 @@ def extract_json(text):
         if match:
             return json.loads(match.group())
     except Exception as e:
-        print("❌ JSON parse error:", e)
+        print(" JSON parse error:", e)
     return None
 
 
 # ---------------- SAFE API CALL ----------------
 def safe_generate(prompt):
     try:
-        # ✅ Double safety (important for reruns)
+        #  Double safety (important for reruns)
         if "api_count" not in st.session_state:
             st.session_state.api_count = 0
 
         st.session_state.api_count += 1
-        print(f"🔥 GEMINI CALL #{st.session_state.api_count}")
+        print(f" GEMINI CALL #{st.session_state.api_count}")
 
         response = model.generate_content(prompt)
         return response
@@ -68,7 +68,7 @@ def clean_5w1h(result):
 # ---------------- MAIN ANALYSIS FUNCTION ----------------
 def analyze_ncr(context):
 
-    # ⭐ LOAD DYNAMIC LEARNING EXAMPLES
+    #  LOAD DYNAMIC LEARNING EXAMPLES
     dynamic_examples = load_champion_examples()
 
     prompt = f"""
