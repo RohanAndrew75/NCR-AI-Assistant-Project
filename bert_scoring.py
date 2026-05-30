@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from bert_score import score as bert_score
 import re
 
-def clean_for_scoring(text):                                                                                                                    #Added foreign language phrase stripping
+def clean_for_scoring(text):                                                                                                                    # Added foreign language phrase stripping
     # Remove content inside single quotes (often foreign language phrases)
     return re.sub(r"'[^']*'", "", text).strip()
 
@@ -19,7 +19,7 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 # -----------------------------
 # Reference NCR examples
 # -----------------------------
-REFERENCE_NCRS = [                                                                                                                                #Expanded REFERENCE_NCRS list
+REFERENCE_NCRS = [                                                                                                                                # Expanded REFERENCE_NCRS list
     "Oil leakage detected in main gearbox seal by service technician during scheduled quarterly maintenance at offshore platform",
     "Thermal anomaly identified in generator bearing section via temperature monitoring system during normal operation in high wind conditions",
     "Gearbox vibration exceeding threshold observed by engineer during routine inspection due to shaft misalignment after recent overhaul",
@@ -51,7 +51,7 @@ def completeness_score(res):
 # SEMANTIC SCORE (HYBRID)
 # =============================
 def semantic_score(text):                                                                                                                           
-    text = clean_for_scoring(str(text))                                                                                                            #Modified semantic_score function to clean_for_scoring which includes foreign language phrase stripping
+    text = clean_for_scoring(str(text))                                           # Modified 'semantic_score' to 'clean_for_scoring' which includes foreign language phrase stripping
 
     # -------- EMBEDDING SIMILARITY --------
     text_vec = model.encode([text])
