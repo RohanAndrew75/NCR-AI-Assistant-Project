@@ -5,6 +5,7 @@ from datetime import datetime
 
 from ncr_analyzer import analyze_ncr
 from scoring import completeness_score, semantic_score, classify
+from bert_scoring import bert_semantic_score
 from learning import load_champion_examples   # ⭐ NEW
 
 # ---------------- LOAD DATA ----------------
@@ -115,8 +116,17 @@ if "last_result" in st.session_state:
     user_input = st.session_state["last_input"]
 
     comp = completeness_score(result)
-    sem = semantic_score(user_input)
-    final = comp + sem
+
+    # Rule-based semantic score
+    rule_sem = semantic_score(user_input)
+
+    # BERT semantic score
+    bert_sem = bert_semantic_score(user_input)
+
+    # Use both score in final calculation
+    semantic = (rule_sem + bert_sem) / 2
+    final = comp + semantic
+
     quality = classify(final)
 
     if comp < 5:
@@ -128,9 +138,9 @@ if "last_result" in st.session_state:
 
     st.subheader(" Evaluation Scores")
     st.write(f"Completeness Score: {comp:.2f}/6")
-    st.write(f"Semantic Score: {sem:.2f}/4")
+    st.write(f"Rule-Based Semantic Score: {rule_sem:.2f}/4")
+    st.write(f"BERT Semantic Score: {bert_sem:.2f}/4")
     st.write(f"Final Score: {final:.2f}/10 → {quality}")
-    st.progress(float(final) / 10)
 
     col1, col2 = st.columns(2)
 

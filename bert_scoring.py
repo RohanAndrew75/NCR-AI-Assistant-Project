@@ -82,3 +82,21 @@ def classify(score):
         return "Medium"
     else:
         return "Low"
+
+def bert_semantic_score(text):
+    text = str(text)
+
+    bert_scores = []
+
+    for ref in REFERENCE_NCRS:
+        _, _, F1 = bert_score(
+            [text],
+            [ref],
+            lang="en",
+            verbose=False
+        )
+        bert_scores.append(float(F1.mean()))
+
+    best_bert = max(bert_scores)
+
+    return round(best_bert * 4, 2)
