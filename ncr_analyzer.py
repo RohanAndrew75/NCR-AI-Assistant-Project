@@ -25,7 +25,7 @@ def extract_json(text):
 
 
 # ---------------- SAFE API CALL ----------------
-def safe_generate(prompt):
+def safe_generate(prompt):                                                                            #Added retry logic for API rate limiting
     try:
         if "api_count" not in st.session_state:
             st.session_state.api_count = 0
