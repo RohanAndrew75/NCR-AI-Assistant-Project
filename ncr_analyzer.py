@@ -65,9 +65,9 @@ def clean_5w1h(result):                                                         
 def analyze_ncr(context):
 
     #  LOAD DYNAMIC LEARNING EXAMPLES
-    dynamic_examples = load_champion_examples()
+    dynamic_examples = load_champion_examples()                                                       #Improved prompt to account for 'How' and 'Who'
 
-    prompt = f"""
+    prompt = f"""                                                                                        
 You are an expert in wind turbine NCR validation.
 
 Use these high-quality examples:
@@ -80,7 +80,7 @@ Extract 5W1H strictly:
 - No hallucination
 - Missing → "Not specified"
 - Keep answers SHORT
-- For "How": describe HOW the issue was detected, diagnosed, or actioned (e.g. "detected via abnormal noise during rotation", "identified during visual inspection")
+- For "How": describe HOW the issue was detected, diagnosed, or actioned (e.g. "detected via abnormal noise during rotation", "identified during visual inspection") 
 - For "Who": include any role mentioned (technician, maintenance crew, engineer, etc.)
 - Translate any non-English phrases to English before extracting
 
