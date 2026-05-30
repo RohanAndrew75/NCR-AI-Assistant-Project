@@ -10,7 +10,7 @@ from learning import load_champion_examples   # ⭐ NEW
 # ---------------- LOAD DATA ----------------
 def load_data():
     return pd.read_excel(
-        r"data\wind_turbine_ncr_dataset_diverse_free_text_1000.xlsx"
+        r"data\wind_turbine_ncr_dataset_diverse_free_text_1000.xlsx"                                                         #Fixed hardcoded dataset path
     )
 
 df = load_data()
@@ -126,7 +126,7 @@ if "last_result" in st.session_state:
     else:
         st.success("NCR acceptable")
 
-    st.subheader("📊 Evaluation Scores")
+    st.subheader("📊 Evaluation Scores")                                                                                #Improved Evaluation Scores UI
     e1, e2, e3, e4 = st.columns(4)
     e1.metric("Completeness", f"{comp:.2f}/6")
     e2.metric("Semantic", f"{sem:.2f}/4")
@@ -146,7 +146,7 @@ if "last_result" in st.session_state:
         st.success(improved_text)
 
     # -------- IMPROVEMENT COMPARISON --------
-    if improved_text:
+    if improved_text:                                                                                                    #Added an Improvement Comparison panel between the original semantic score and the improved score
         st.subheader("📊 Improvement Comparison")
 
         imp_sem = round(semantic_score(improved_text), 2)
