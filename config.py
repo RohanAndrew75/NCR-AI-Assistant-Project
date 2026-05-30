@@ -11,9 +11,9 @@ if not API_KEY:
 
 genai.configure(api_key=API_KEY)
 
-model = genai.GenerativeModel(                                                                                                                                                           
+model = genai.GenerativeModel(
     "gemini-2.5-flash",
     generation_config=genai.types.GenerationConfig(
-        temperature=0                                        # Set Gemini temperature to 0 making the output consistent
+        temperature=0                                           # Set Gemini temperature to 0 making the output consistent
     )
 )

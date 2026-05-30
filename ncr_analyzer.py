@@ -25,7 +25,7 @@ def extract_json(text):
 
 
 # ---------------- SAFE API CALL ----------------
-def safe_generate(prompt):                                                                            # Added retry logic for API rate limiting
+def safe_generate(prompt):                                                                             # Added retry logic for API rate limiting
     try:
         if "api_count" not in st.session_state:
             st.session_state.api_count = 0
@@ -47,7 +47,7 @@ def safe_generate(prompt):                                                      
         return {"error": error_msg}
 
 # ---------------- CLEAN 5W1H ----------------
-def clean_5w1h(result):                                                                                # Removed over-aggressive clean_5w1h rules
+def clean_5w1h(result):                                                                               # Removed over-aggressive clean_5w1h rules
     def clean(text):
         return text.strip() if isinstance(text, str) else "Not specified"
 
@@ -55,7 +55,7 @@ def clean_5w1h(result):                                                         
         result[key] = clean(result.get(key, "Not specified"))
 
     # Fix verbose "What" only if extremely long
-    if result.get("What") and len(result["What"].split()) > 20:                                        # "What" was truncated at 12 words, changed to 20
+    if result.get("What") and len(result["What"].split()) > 20:                                       # "What" was truncated at 12 words, changed to 20
         result["What"] = result["What"].split(".")[0]
 
     return result
@@ -65,9 +65,9 @@ def clean_5w1h(result):                                                         
 def analyze_ncr(context):
 
     #  LOAD DYNAMIC LEARNING EXAMPLES
-    dynamic_examples = load_champion_examples()                                                       # Improved prompt to account for 'How' and 'Who'
+    dynamic_examples = load_champion_examples()                                                       # Improved prompt to account for 'How' and 'Who' in {dynamic examples}
 
-    prompt = f"""                                                                                        
+    prompt = f"""
 You are an expert in wind turbine NCR validation.
 
 Use these high-quality examples:
@@ -80,7 +80,7 @@ Extract 5W1H strictly:
 - No hallucination
 - Missing → "Not specified"
 - Keep answers SHORT
-- For "How": describe HOW the issue was detected, diagnosed, or actioned (e.g. "detected via abnormal noise during rotation", "identified during visual inspection") 
+- For "How": describe HOW the issue was detected, diagnosed, or actioned (e.g. "detected via abnormal noise during rotation", "identified during visual inspection")
 - For "Who": include any role mentioned (technician, maintenance crew, engineer, etc.)
 - Translate any non-English phrases to English before extracting
 
