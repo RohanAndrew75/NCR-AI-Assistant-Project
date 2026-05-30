@@ -8,7 +8,7 @@ from bert_score import score as bert_score
 import re
 
 def clean_for_scoring(text):                                                                                                                            # Added foreign language phrase stripping
-    # Remove content inside single quotes
+     # Remove content inside single quotes
     return re.sub(r"'[^']*'", "", text).strip()
 
 # -----------------------------
