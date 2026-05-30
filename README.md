@@ -15,6 +15,7 @@ Industrial NCR reports are often:
 - Hard to analyze for root cause detection
 
 This system transforms free-text NCR descriptions into:
+
 ✔ Structured information  
 ✔ Quality-scored reports  
 ✔ Improved standardized descriptions  
