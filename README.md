@@ -47,22 +47,22 @@ Scoring Engine (Completeness + Semantic)
 ↓
 Final Output Dashboard
 
-
 ---
 
 ## 📁 Project Structure
 
+```bash
 ncr-ai-assistant/
 │
-├── app_main.py # Streamlit UI
-├── config.py # Gemini model config
-├── ncr_analyzer.py # AI + parsing logic
-├── scoring.py # Evaluation system
-├── requirements.txt # Dependencies
-├── .gitignore # Security rules
-├── .env # API key (local only)
-└── dataset.xlsx # NCR dataset
-
+├── app_main.py          # Streamlit UI
+├── config.py            # Gemini model configuration
+├── ncr_analyzer.py      # AI processing and parsing logic
+├── scoring.py           # Evaluation and scoring system
+├── requirements.txt     # Project dependencies
+├── .gitignore           # Security and ignored files
+├── .env                 # API key and environment variables (local only)
+└── dataset.xlsx         # NCR dataset
+```
 
 ---
 
