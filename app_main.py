@@ -5,13 +5,12 @@ from datetime import datetime
 
 from ncr_analyzer import analyze_ncr
 from scoring import completeness_score, semantic_score, classify
-from bert_scoring import bert_semantic_score
 from learning import load_champion_examples   # ⭐ NEW
 
 # ---------------- LOAD DATA ----------------
 def load_data():
     return pd.read_excel(
-        r"D:\Capstone Project\NCR\data\wind_turbine_ncr_dataset_diverse_free_text_1000.xlsx"
+        r"data\wind_turbine_ncr_dataset_diverse_free_text_1000.xlsx"
     )
 
 df = load_data()
@@ -116,44 +115,49 @@ if "last_result" in st.session_state:
     user_input = st.session_state["last_input"]
 
     comp = completeness_score(result)
-
-    # Rule-based semantic score
-    rule_sem = semantic_score(user_input)
-
-    # BERT semantic score
-    bert_sem = bert_semantic_score(user_input)
-
-    # Use both score in final calculation
-    semantic = (rule_sem + bert_sem) / 2
-    final = comp + semantic
-
+    sem = semantic_score(user_input)
+    final = comp + sem
     quality = classify(final)
 
     if comp < 5:
-        st.error(" Missing critical 5W1H fields")
+        st.error("Missing critical 5W1H fields")
     elif final < 7:
-        st.warning(" NCR quality can be improved")
+        st.warning("NCR quality can be improved")
     else:
-        st.success(" NCR acceptable")
+        st.success("NCR acceptable")
 
-    st.subheader(" Evaluation Scores")
-    st.write(f"Completeness Score: {comp:.2f}/6")
-    st.write(f"Rule-Based Semantic Score: {rule_sem:.2f}/4")
-    st.write(f"BERT Semantic Score: {bert_sem:.2f}/4")
-    st.write(f"Final Score: {final:.2f}/10 → {quality}")
+    st.subheader("📊 Evaluation Scores")
+    e1, e2, e3, e4 = st.columns(4)
+    e1.metric("Completeness", f"{comp:.2f}/6")
+    e2.metric("Semantic", f"{sem:.2f}/4")
+    e3.metric("Final Score", f"{final:.2f}/10")
+    e4.metric("Quality", quality)
+    st.progress(float(final) / 10)
 
     col1, col2 = st.columns(2)
+    improved_text = result.get("Improved_Description", "")
 
     with col1:
-        st.write(" Original NCR")
+        st.write("📄 Original NCR")
         st.info(user_input)
 
     with col2:
-        st.write(" AI Improved NCR")
-        st.success(result.get("Improved_Description", "Not generated"))
+        st.write("✨ AI Improved NCR")
+        st.success(improved_text)
 
-    st.subheader(" 5W1H Extraction")
+    # -------- IMPROVEMENT COMPARISON --------
+    if improved_text:
+        st.subheader("📊 Improvement Comparison")
 
+        imp_sem = round(semantic_score(improved_text), 2)
+        delta = round(imp_sem - sem, 2)
+        
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Original Semantic", f"{sem}/4")
+        c2.metric("Improved Semantic", f"{imp_sem}/4")
+        c3.metric("Semantic Improvement", f"+{delta}" if delta >= 0 else str(delta))
+
+    st.subheader("5W1H Extraction")
     for k in ["What", "Where", "When", "Why", "Who", "How"]:
         val = result.get(k, "Not specified")
         status = "✅" if val != "Not specified" else "❌"
