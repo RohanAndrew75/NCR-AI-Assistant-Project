@@ -47,7 +47,7 @@ def safe_generate(prompt):
         return {"error": error_msg}
 
 # ---------------- CLEAN 5W1H ----------------
-def clean_5w1h(result):
+def clean_5w1h(result):                                                                                #Removed over-aggressive clean_5w1h rules
     def clean(text):
         return text.strip() if isinstance(text, str) else "Not specified"
 
@@ -55,7 +55,7 @@ def clean_5w1h(result):
         result[key] = clean(result.get(key, "Not specified"))
 
     # Fix verbose "What" only if extremely long
-    if result.get("What") and len(result["What"].split()) > 20:
+    if result.get("What") and len(result["What"].split()) > 20:                                        #"What" was truncated at 12 words, changed to 20
         result["What"] = result["What"].split(".")[0]
 
     return result
