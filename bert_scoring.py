@@ -5,6 +5,11 @@
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from bert_score import score as bert_score
+import re
+
+def clean_for_scoring(text):
+    # Remove content inside single quotes (often foreign language phrases)
+    return re.sub(r"'[^']*'", "", text).strip()
 
 # -----------------------------
 # Load model ONCE (important)
@@ -15,13 +20,17 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 # Reference NCR examples
 # -----------------------------
 REFERENCE_NCRS = [
-    "Oil leakage detected due to seal failure during turbine inspection",
-    "Thermal anomaly caused by bearing overheating in generator section",
-    "Gearbox vibration observed during maintenance due to misalignment",
-    "Generator overheating detected during operation monitoring",
-    "Blade damage identified during inspection after storm conditions"
+    "Oil leakage detected in main gearbox seal by service technician during scheduled quarterly maintenance at offshore platform",
+    "Thermal anomaly identified in generator bearing section via temperature monitoring system during normal operation in high wind conditions",
+    "Gearbox vibration exceeding threshold observed by engineer during routine inspection due to shaft misalignment after recent overhaul",
+    "Generator overheating detected by SCADA monitoring during peak load operation, investigated by electrical maintenance team",
+    "Leading edge blade erosion identified during annual drone inspection following storm season at coastal wind farm",
+    "Loose bolts found in yaw system housing by maintenance crew during post-shutdown inspection due to suspected assembly error",
+    "Hydraulic fluid leak discovered in pitch system by technician during weekly walkthrough at onshore wind farm",
+    "Electrical fault in control cabinet caused automatic turbine shutdown, identified remotely via condition monitoring system",
+    "Crack detected in cast iron nacelle frame during visual inspection following high vibration alarm triggered by CMS",
+    "Rotor blade delamination found during scheduled inspection by composite repair specialist after lightning strike event",
 ]
-
 
 # =============================
 # COMPLETENESS SCORE (5W1H)
@@ -42,7 +51,7 @@ def completeness_score(res):
 # SEMANTIC SCORE (HYBRID)
 # =============================
 def semantic_score(text):
-    text = str(text)
+    text = clean_for_scoring(str(text))
 
     # -------- EMBEDDING SIMILARITY --------
     text_vec = model.encode([text])
@@ -82,21 +91,3 @@ def classify(score):
         return "Medium"
     else:
         return "Low"
-
-def bert_semantic_score(text):
-    text = str(text)
-
-    bert_scores = []
-
-    for ref in REFERENCE_NCRS:
-        _, _, F1 = bert_score(
-            [text],
-            [ref],
-            lang="en",
-            verbose=False
-        )
-        bert_scores.append(float(F1.mean()))
-
-    best_bert = max(bert_scores)
-
-    return round(best_bert * 4, 2)

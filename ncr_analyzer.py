@@ -1,6 +1,7 @@
 import json
 import re
 import streamlit as st
+import time
 
 from config import model
 from few_shot_examples import CHAMPION_NCRS
@@ -26,19 +27,24 @@ def extract_json(text):
 # ---------------- SAFE API CALL ----------------
 def safe_generate(prompt):
     try:
-        #  Double safety (important for reruns)
         if "api_count" not in st.session_state:
             st.session_state.api_count = 0
-
         st.session_state.api_count += 1
-        print(f" GEMINI CALL #{st.session_state.api_count}")
 
-        response = model.generate_content(prompt)
-        return response
-
+        for attempt in range(3):
+            response = model.generate_content(prompt)
+            return response
+            
     except Exception as e:
-        return {"error": str(e)}
-
+        error_msg = str(e)
+        if "429" in error_msg:
+            if attempt < 2:
+                wait = 15 * (attempt + 1)
+                st.warning(f"Rate limit hit, retrying in {wait}s...")
+                time.sleep(wait)
+            else:
+                return {"error": "Rate limit exceeded. Please wait a few minutes and try again."}
+        return {"error": error_msg}
 
 # ---------------- CLEAN 5W1H ----------------
 def clean_5w1h(result):
@@ -48,19 +54,9 @@ def clean_5w1h(result):
     for key in ["What", "Where", "When", "Why", "Who", "How"]:
         result[key] = clean(result.get(key, "Not specified"))
 
-    # Fix incorrect "How"
-    if result.get("How") and any(
-        w in result["How"].lower() for w in ["inspection", "observed", "found"]
-    ):
-        result["How"] = "Not specified"
-
-    # Fix verbose "What"
-    if result.get("What") and len(result["What"].split()) > 12:
+    # Fix verbose "What" only if extremely long
+    if result.get("What") and len(result["What"].split()) > 20:
         result["What"] = result["What"].split(".")[0]
-
-    # Weak "Who"
-    if result.get("Who") and "technician" in result["Who"].lower():
-        result["Who"] = "Not specified"
 
     return result
 
@@ -84,19 +80,22 @@ Extract 5W1H strictly:
 - No hallucination
 - Missing → "Not specified"
 - Keep answers SHORT
+- For "How": describe HOW the issue was detected, diagnosed, or actioned (e.g. "detected via abnormal noise during rotation", "identified during visual inspection")
+- For "Who": include any role mentioned (technician, maintenance crew, engineer, etc.)
+- Translate any non-English phrases to English before extracting
 
 NCR:
 {context}
 
 Return JSON:
 {{
- "What": "",
- "Where": "",
- "When": "",
- "Why": "",
- "Who": "",
- "How": "",
- "Improved_Description": ""
+    "What": "",
+    "Where": "",
+    "When": "",
+    "Why": "",
+    "Who": "",
+    "How": "",
+    "Improved_Description": ""
 }}
 """
 
